@@ -160,6 +160,13 @@ int gtp_set_cb_conf(struct gsn_t *gsn,
   return 0;
 }
 
+int gtp_set_cb_recovery(struct gsn_t *gsn,
+		        int (*cb) (struct sockaddr_in *peer,
+				   uint8_t recovery)) {
+  gsn->cb_recovery = cb;
+  return 0;
+}
+
 extern int gtp_set_cb_data_ind(struct gsn_t *gsn,
 			   int (*cb_data_ind) (struct pdp_t* pdp,
 					   void* pack,
@@ -928,6 +935,8 @@ int gtp_echo_conf(struct gsn_t *gsn, int version, struct sockaddr_in *peer,
   /* Instead we return the recovery number in the callback function */
   if (gsn->cb_conf) gsn->cb_conf(type, recovery, NULL, cbp);
 
+  if (gsn->cb_recovery) gsn->cb_recovery(peer, recovery);
+
   return 0;
 }
 
@@ -1322,7 +1331,7 @@ int gtp_create_pdp_ind(struct gsn_t *gsn, int version,
   
   /* Recovery (optional) */
   if (!gtpie_gettv1(ie, GTPIE_RECOVERY, 0, &recovery)) {
-    /* TODO: Handle received recovery IE */
+    if (gsn->cb_recovery) gsn->cb_recovery(peer, recovery);
   }
   
   /* Selection mode (conditional) */
@@ -1598,7 +1607,7 @@ int gtp_create_pdp_conf(struct gsn_t *gsn, int version,
 
   /* Extract recovery (optional) */
   if (!gtpie_gettv1(ie, GTPIE_RECOVERY, 0, &recovery)) {
-    /* TODO: Handle received recovery IE */
+    if (gsn->cb_recovery) gsn->cb_recovery(peer, recovery);
   }
 
   /* Extract protocol configuration options (optional) */
@@ -1980,7 +1989,7 @@ int gtp_update_pdp_ind(struct gsn_t *gsn, int version,
 
   /* Recovery (optional) */
   if (!gtpie_gettv1(ie, GTPIE_RECOVERY, 0, &recovery)) {
-    /* TODO: Handle received recovery IE */
+    if (gsn->cb_recovery) gsn->cb_recovery(peer, recovery);
   }
 
   if (version == 0) {
@@ -2145,7 +2154,7 @@ int gtp_update_pdp_conf(struct gsn_t *gsn, int version,
 
   /* Extract recovery (optional) */
   if (!gtpie_gettv1(ie, GTPIE_RECOVERY, 0, &recovery)) {
-    /* TODO: Handle received recovery IE */
+    if (gsn->cb_recovery) gsn->cb_recovery(peer, recovery);
   }
 
   /* Check all conditional information elements */
