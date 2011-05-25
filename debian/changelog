@@ -1,3 +1,9 @@
-openggsn (0.91-0~jrsantos.1) UNRELEASED; urgency=low
+openggsn (0.91-0~jrsantos.1) unstable; urgency=low
 
- -- Jonathan Santos <jrsantos@jonathanrsantos.com>  Wed, 25 May 2011 12:13:43 -0400
+  [ Harald Welte ]
+  * libgtp: introduce cb_recovery() callback
+
+  [ Jonathan Santos ]
+  * Add sarge-compatible debian files
+
+ -- Jonathan Santos <jrsantos@jonathanrsantos.com>  Wed, 25 May 2011 13:14:31 -4000
