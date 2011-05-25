@@ -1,0 +1,23 @@
+Source: openggsn
+Priority: optional
+Maintainer: unknown <jrsantos@vanu.com>
+Build-Depends: debhelper (>= 4.0.0), autotools-dev
+Standards-Version: 3.6.1
+Section: libs
+
+Package: openggsn
+Architecture: any
+Depends: lsb-base (>= 3.0-6), ${shlibs:Depends}
+Description: Gateway GPRS Support Node
+
+Package: libgtp-dev
+Section: libdev
+Architecture: any
+Depends: libgtp0 (= ${Source-Version})
+Description: library implementing the GTP protocol between SGSN and GGSN (Development files)
+
+Package: libgtp0
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}
+Description: library implementing the GTP protocol between SGSN and GGSN (Shared library)
